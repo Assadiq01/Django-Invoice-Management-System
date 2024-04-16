@@ -1,0 +1,83 @@
+<!-- customer/display_customers.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- Example usage in a template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!--<img src="{% static 'img/logo.png' %}" alt="Logo">-->
+   
+</head>
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <p style="width: 130px; margin-left: 70px; margin-bottom: 20px; ">Sharifawa
+                        </span>
+                    </a>
+                </li>
+                
+
+
+                <li>
+                    <a href="{% url 'products:customer_list' %}">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Customers</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'products:create_customer' %}">
+                        <span class="icon">
+                            <ion-icon name="person-add-outline"></ion-icon>
+                        </span>
+                        <span class="title">Add Customers</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://asdq-technology.github.io/assadiq_technology/" target="_blank">
+                        <span class="icon">
+                            <ion-icon name="navigate-outline"></ion-icon>
+                        </span>
+                        <span class="title">Developer info.</span>
+                    </a>
+                </li>
+
+                <li>
+                    {% if user.is_authenticated %}
+                        <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        {% block content %}
+
+        {% endblock %}
+
+        <!-- =========== Scripts =========  -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+</body>
+</html>
+
+

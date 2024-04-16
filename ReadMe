@@ -1,0 +1,20 @@
+Invoice Management System
+
+This is an invoicing App, it contains basic Invoice features such as: 
+1. adding new customer
+    i. under each customer, his related invoices are listed
+    ii. print & edit functionality are introduced
+
+2. list of all the customers in the database
+    i. search functionality is introduced
+
+3. Simple UI is created to make the project look better
+
+
+-you can run the project by installing python in your computer
+-install and activate the virtual environment in the project
+- run `pip install -r requirements.txt` to install all the libraries
+navigate to the projects folder where manage.py file is located and run:
+`python manage.py makemigrations` when it finishes, run `python manage.py migrate`
+
+then run `python manage.py runserver` it will run under this port: `http://127.0.0.1:8000/`. copy the port and paste it in your browser and the add `http://127.0.0.1:8000/accounts/register`. the project will open

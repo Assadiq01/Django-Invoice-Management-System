@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+<title>{{ customer.full_name}} - Details</title>
+
+<style>
+
+  .description {
+    position: relative;
+    min-height: auto;
+    background: var(--white);
+    padding: 20px;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+  }
+  button {
+    text-decoration: none;
+      background-color: #074d97;
+      color: white;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+  }
+
+  button:hover {
+      background-color: #007BFF;
+  }
+
+  @media print {
+    body * {
+      display: none;
+    }
+
+    #content,
+    #content * {
+      display: block;
+    }
+  }
+
+  .picture-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .image-link {
+    flex-basis: calc(50% - 10px); /* Set to 50% width with some spacing */
+    margin-bottom: 20px; /* Adjust the spacing between rows */
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px; /* Optional: Add rounded corners */
+  }
+  .pagination {
+        display: inline-block;
+        margin-top: 40px;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #007BFF;
+    }
+
+    .pagination a.active {
+        background-color: #007BFF;
+        color: white;
+        border: 1px solid #007BFF;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+
+</style>
+
+<body>
+    <!-- ========================= Main ==================== -->
+    <div class="main" id="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+        </div>
+
+      <div class="details" style="width: 100%; display: block;">
+        <div class="description">
+              <div class="cardHeader">
+                <h2>Customer's Basic Details</h2>
+              </div>
+              <strong>
+                <p style="margin-top: 30px; font-family: Ubuntu;">
+                  Full Name : {{ customer.full_name }}
+                </p>
+                <p style="margin-top: 30px; font-family: Ubuntu;">
+                  Phone Number : {{ customer.phone_number }}
+                </p>
+                <p style="margin-top: 30px; font-family: Ubuntu;">
+                  Address : {{ customer.address }}
+                </p>
+              </strong>
+               
+        </div>
+      </div>
+                
+ 
+    <div id="content">  <!-- ================ Order Details List ================= -->
+        <div class="details" style="width: 100%; display: block;">
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>Customer's Invoices</h2>
+                    
+                    <strong class="my-btn">
+                      <button>
+                        <a href="{% url 'products:customer_list' %}" style="color: white; text-decoration: none;">
+                          Back
+                        </a>
+                      </button> 
+                    </strong>
+                    <strong class="my-btn">
+                        <button>
+                          <a href="{% url 'products:create_product' customer_id=customer.id %}" style="color: white; text-decoration: none;">
+                            New Invoice
+                          </a>
+                        </button>
+                    </strong>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Invoice Title</td>
+                            <td>Invoice Edit</td>
+                            <td>Date Created</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% if products %}
+                        {% for product in products %}
+                        <tr>
+                            <td><a href="{% url 'products:product_detail' pk=product.id %}"
+                                style="text-decoration: none; 
+                                border: 1px solid white; 
+                                background-color: white; 
+                                padding: 3px 3px 3px 3px;
+                                border-radius: 5px;
+                                color: #007BFF;">{{ product.title }}</a></td>
+                                <td><a href="{% url 'products:edit_customer_products' product.id %}"
+                                  style="text-decoration: none; 
+                                  border: 1px solid #007BFF; 
+                                  background-color: white; 
+                                  padding: 3px 3px 3px 3px;
+                                  border-radius: 5px;
+                                  color: #007BFF;">Edit</a></td>
+                            <td>{{ product.date_created }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <p>No Invoice found.</p>
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                <center>
+                  <div class="pagination">
+                      {% if customers.has_previous %}
+                          <a href="?page=1">&laquo; first</a>
+                          <a href="?page={{ customers.previous_page_number }}">previous</a>
+                      {% endif %}
+                      
+                      {% for num in customers.paginator.page_range %}
+                          {% if customers.number == num %}
+                              <a href="?page={{ num }}" class="active">{{ num }}</a>
+                          {% else %}
+                              <a href="?page={{ num }}">{{ num }}</a>
+                          {% endif %}
+                      {% endfor %}
+                      
+                      {% if customers.has_next %}
+                          <a href="?page={{ customers.next_page_number }}">next</a>
+                          <a href="?page={{ customers.paginator.num_pages }}">last &raquo;</a>
+                      {% endif %}
+                  </div>
+              </center>
+            </div>
+        </div> 
+    </div>
+</div>
+
+<script>
+    const printBTN = document.getElementById('print');
+    printBTN.addEventListener('click', function () {
+      printContent();
+    });
+
+    function printContent() {
+      // Hide unnecessary elements during printing
+      const bodyContent = document.body.innerHTML;
+      document.body.innerHTML = document.getElementById('content').innerHTML;
+
+      // Print the content
+      window.print();
+
+      // Restore the body content
+      document.body.innerHTML = bodyContent;
+    }
+  </script>
+
+    
+</body>
+
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<style>
+  /* Add your custom styles here */
+  form {
+      max-width: 400px;
+      margin: 0 auto;
+  }
+
+  label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+  }
+
+  input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+  }
+
+  button {
+      background-color: #074d97;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+  }
+
+  button:hover {
+      background-color: #007BFF;
+  }
+  h3 {
+    margin-bottom: 3.5rem;
+  }
+</style>
+
+
+<title>Create Customers</title>
+    <!-- ========================= Main ==================== -->
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+        </div>
+
+        
+
+        <!-- ================ Order Details List ================= -->
+        <div class="details" style="width: 100%; display: block;">
+            <div class="recentOrders">
+                <center>
+                  <h3>Create Customer</h3>
+                </center>
+
+                <form method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  
+                  <label for="full_name">Full Name:</label>
+                  {{ form.full_name }}
+              
+                  <label for="phone_number">Phone Number:</label>
+                  {{ form.phone_number }}
+              
+                  <label for="address">Address:</label>
+                  {{ form.address }}
+              
+                  <button type="submit">Create Customer</button>
+              </form>
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

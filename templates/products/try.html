@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<title>Delete Product</title>
+    <!-- ========================= Main ==================== -->
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+
+        </div>
+
+        <!-- ================ Order Details List ================= -->
+        <div class="details" style="width: 100%; display: block;">
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>List of Customers</h2>
+                </div>
+
+                <h2>Confirm Delete</h2>
+                <p>Are you sure you want to delete the product "{{ product.title }}"?</p>
+                <form method="post" action="{% url 'products:delete_product' pk=product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a href="{% url 'products:customer_product_list' customer_id=product.customer.id %}" class="btn btn-secondary">Cancel</a>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

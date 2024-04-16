@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block content %}
+<title>Create Customers</title>
+<!-- ========================= Main ==================== -->
+<style>
+    /* Add your custom styles here */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+    }
+
+    .btn-secondary {
+        background-color: #093768;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+        background-color: #007BFF;
+    }
+
+</style>
+
+<div class="main">
+    <div class="topbar">
+        <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+    </div>
+
+    <!-- ================ Order Details List ================= -->
+    <div class="details" style="width: 100%; display: block;">
+        <div class="recentOrders">
+            <div class="cardHeader">
+                <h2>Create New Invoice</h2>
+
+                <div class="my-btn">
+                    <a href="#" id="add-variant-button" class="btn btn-secondary add-variants">Add More items</a>
+                </div>
+            </div>
+
+            <form enctype="multipart/form-data" class="container" method="post" id="product_form"
+                action="{% url 'products:create_product' customer_id=customer.id %}">
+                {% csrf_token %}
+                <!-- inline form for Variant start -->
+                {% with named_formsets.variants as formset %}
+                {{ formset.management_form }}
+                <script type="text/html" id="variants-template">
+                    <tr id="variants-__prefix__" class="hide_all">
+                        {% for fields in formset.empty_form.hidden_fields %}
+                        {{ fields }}
+                        {% endfor %}
+                        {% for fields in formset.empty_form.visible_fields %}
+                        <td>{{ fields }}</td>
+                        {% endfor %}
+                    </tr>
+                </script>
+                <div class="table-responsive card mt-4">
+                    <div class="card-header card-header-secondary">
+                        <h4 class="card-title">Add Items</h4>
+                    </div>
+                    <table class="table card-header">
+                        <thead class="text-secondary">
+                            <th>Quantity <span style="color: red;" class="required">*</span></th>
+                            <th>Description<span style="color: red;" class="required">*</span></th>
+                            <th>Rate<span style="color: red;" class="required">*</span></th>
+                            <th>Amount<span style="color: red;" class="required">*</span></th>
+
+                            <th>Delete?</th>
+                        </thead>
+                        <tbody id="item-variants">
+                            {% for formss in formset %}
+                            {{ formss.management_form }}
+                            <tr id="variants-{{ forloop.counter0 }}" class="hide_all">
+                                {{ formss.id }}
+                                {% for field in formss.visible_fields %}
+                                <td>
+                                    {{ field }}
+                                    {% for error in field.errors %}
+                                    <span style="color: red">{{ error }}</span>
+                                    {% endfor %}
+                                    {% comment %} {{ field.DELETE }} {% endcomment %}
+                                </td>
+                                {% endfor %}
+                                {% if formss.instance.pk %}
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#exampleModal{{ formss.instance.pk }}">
+                                        Delete
+                                    </button>
+                                    <div class="modal fade" id="exampleModal{{ formss.instance.pk }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="exampleModalLabel{{ formss.instance.pk }}"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="exampleModalLabel{{ formss.instance.pk }}">Are Your Sure You Want
+                                                        To Delete This?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'products:delete_variant' formss.instance.pk %}"
+                                                        type="button" class="btn btn-primary">Yes, Delete</a>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>   
+                </div>
+                
+                {% endwith %}
+                <!-- inline form for Variant end -->
+
+                <hr>
+
+                <!-- main form start --- in our case product form -->
+                <div class="table-responsive card mt-4">
+                    <div class="card-header card-header-secondary">
+                        <h4 class="card-title">Add Payment</h4>
+                    </div>
+                    <table class="table card-header">
+                        <thead class="text-secondary">
+                            <th>Customer <span style="color: red;" class="required">*</span></th>
+                            <th>Title<span style="color: red;" class="required">*</span></th>
+                            <th>Date Created<span style="color: red;" class="required">*</span></th>
+                            <th>Total<span style="color: red;" class="required">*</span></th>
+                            <th>Sub Total<span style="color: red;" class="required">*</span></th>
+                            <th>Deposit <span style="color: red;" class="required">*</span></th>
+                            <th>Balance 1<span style="color: red;" class="required">*</span></th>
+                            <th>Balance 2<span style="color: red;" class="required">*</span></th>
+                        </thead>
+                        <tbody id="item-variants">
+                            <tr>
+                                <td>
+                                    {{ form.customer }}
+                                    {% for error in form.customer.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %} 
+                                </td>
+                                <td>
+                                    {{ form.title }}
+                                    {% for error in form.title.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.date_created }}
+                                    {% for error in form.date_created.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.total }}
+                                    {% for error in form.total.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.sub_total }}
+                                    {% for error in form.sub_total.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.deposit }}
+                                    {% for error in form.deposit.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.balance1 }}
+                                    {% for error in form.balance1.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.balance2 }}
+                                    {% for error in form.balance2.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-secondary btn-block">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function () {
+        // when user clicks add more btn of images
+        $('.add-images').click(function (ev) {
+            ev.preventDefault();
+            var count = $('#item-images').children().length;
+            var tmplMarkup = $('#images-template').html();
+            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+            $('#item-images').append(compiledTmpl);
+
+            // update form count
+            $('#id_images-TOTAL_FORMS').attr('value', count + 1);
+        });
+    });
+
+    $(document).ready(function () {
+        // when user clicks add more btn of variants
+        $('.add-variants').click(function (ev) {
+            ev.preventDefault();
+            var count = $('#item-variants').children().length;
+            var tmplMarkup = $('#variants-template').html();
+            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+            $('#item-variants').append(compiledTmpl);
+
+            // update form count
+            $('#id_variants-TOTAL_FORMS').attr('value', count + 1);
+        });
+    });
+</script>
+
+{% endblock %}

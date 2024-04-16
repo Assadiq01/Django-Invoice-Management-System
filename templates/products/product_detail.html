@@ -1,0 +1,113 @@
+{% extends "invoice_base.html" %}
+
+{% block content %}
+
+
+
+        <div class = "invoice-wrapper" id = "print-area">
+            <div class = "invoice">
+                <div class = "invoice-container">
+                    <div class = "invoice-head">
+                        <div class = "invoice-head-top-left">
+                            <center>
+                             <h1>SHARIFAWA ALUMINIUM & STEEL WORKS</h1><br>
+                             <h3>08036855331, 08033656775</h3>
+                             <h3>Office No.: 888, KABUGA, KANO</h3>
+                            </center>
+                         </div>
+                        <div class = "hr"></div>
+                        <div class = "invoice-head-middle">
+                            <div class = "invoice-head-middle-left text-start">
+                                <p><span class = "text-bold">Date</span>: {{ product.date_created }}</p>
+                            </div>
+                            <div class = "invoice-head-middle-right text-end">
+                                <p><spanf class = "text-bold">Invoice No:</span> {{ product.id }}</p>
+                            </div>
+                        </div>
+                        <div class = "hr"></div>
+                        <div class = "invoice-head-bottom">
+                            <div class = "invoice-head-bottom-left">
+                                <ul>
+                                    <li class = 'text-bold'>Invoiced To:</li>
+                                    <li>{{ product.customer.full_name }}</li>
+                                    <li>{{ product.customer.phone_number }}</li>
+                                    <li>{{ product.customer.address }}</li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class = "overflow-view">
+                        <div class = "invoice-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td class = "text-bold">Description</td>
+                                        <td class = "text-bold">Qauntity</td>
+                                        <td class = "text-bold">Rate</td>
+                                        <td class = "text-bold">Amount</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for variant in product.variant_set.all %}
+                                    <tr>
+                                        <td>{{ variant.description }}</td>
+                                        <td>{{ variant.quantity }}</td>
+                                        <td>{{ variant.rate }}</td>
+                                        <td>{{ variant.amount }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class = "invoice-body-bottom">
+                                <div class = "invoice-body-info-item border-bottom">
+                                    <div class = "info-item-td text-start text-bold">Sub Total:</div>
+                                    <div class = "info-item-td text-start">{{ product.sub_total }}</div>
+                                </div>
+                                <div class = "invoice-body-info-item border-bottom">
+                                    <div class = "info-item-td text-start text-bold">Deposit:</div>
+                                    <div class = "info-item-td text-start">{{ product.deposit }}</div>
+                                </div>
+                                <div class = "invoice-body-info-item border-bottom">
+                                    <div class = "info-item-td text-start text-bold">Balance 1:</div>
+                                    <div class = "info-item-td text-start">{{ product.balance1 }}</div>
+                                </div>
+                                <div class = "invoice-body-info-item border-bottom">
+                                    <div class = "info-item-td text-start text-bold">Balance 2:</div>
+                                    <div class = "info-item-td text-start">{{ product.balance2 }}</div>
+                                </div>
+                                <div class = "invoice-body-info-item">
+                                    <div class = "info-item-td text-start text-bold">Total:</div>
+                                    <div class = "info-item-td text-start">{{ product.total }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "invoice-foot text-center">
+                        <p><span class = "text-bold text-center">NOTE:&nbsp;</span>This is computer generated receipt and does not require physical signature.</p>
+
+                        <div class = "invoice-btns">
+                            <button type = "button" class = "invoice-btn" onclick="printInvoice()">
+                                <span>
+                                    <i class="fa-solid fa-print"></i>
+                                </span>
+                                <span>Print</span>
+                            </button>
+
+                            <button type = "button" class = "invoice-btn">
+                                <span><a href="{% url 'products:customer_product_list' customer_id=product.customer.id %}">Back</a></span>
+                            </button>
+
+                            <button type = "button" class = "invoice-btn">
+                                <span><a href="{% url 'products:edit_customer_products' product.id %}">Edit Invoice</a></span>
+                            </button>
+
+                            <button type = "button" class = "invoice-btn">
+                                <span><a href="{% url 'products:delete_product' pk=product.id %}">Delete Invoice</a></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

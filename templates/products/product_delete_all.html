@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Delete All Products</h2>
+    <p>Are you sure you want to delete all products?</p>
+    <form method="post" action="{% url 'products:delete_all_products' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete All</button>
+        <a href="{% url 'products:customer_product_list' customer_id=None %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}

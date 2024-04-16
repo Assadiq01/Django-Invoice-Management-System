@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<style>
+    .delete-confirmation {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .delete-confirmation p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  
+    .delete-confirmation form {
+      display: flex;
+      justify-content: space-between;
+    }
+    h2 {
+        color: red;
+    }
+  
+    .delete-confirmation button,
+    .delete-confirmation a {
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #fff;
+      cursor: pointer;
+    }
+  
+    .delete-confirmation button {
+      background-color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+  
+    .delete-confirmation a {
+      background-color: #6c757d;
+      border: 1px solid #6c757d;
+    }
+  </style>
+  
+
+
+<title>Delete Product</title>
+    <!-- ========================= Main ==================== -->
+    <div class="main">
+        <div class="topbar">
+            <div class="toggle">
+                <ion-icon name="menu-outline"></ion-icon>
+            </div>
+
+        </div>
+
+        <!-- ================ Order Details List ================= -->
+        <div class="details" style="width: 100%; display: block;">
+            <div class="recentOrders">
+
+                <div class="delete-confirmation">
+                    <h2>Delete Confirmation</h2>
+                    <p>Are you sure you want to delete the product "{{ product.title }}"?</p>
+                    <form method="post" action="{% url 'products:delete_product' pk=product.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                      <a href="{% url 'products:customer_product_list' customer_id=product.customer.id %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                  </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
